@@ -1,5 +1,5 @@
 .page {
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 32px;
   position: relative;
@@ -511,3 +511,36 @@ section {
     padding: 24px;
   }
 }
+
+/* Wide screens: projects sit side by side, last odd card spans the row */
+@media (min-width: 1000px) {
+  .project-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .project-list > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Project details dropdown ---------- */
+.project-more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  padding: 4px 0;
+}
+.project-more summary::-webkit-details-marker { display: none; }
+.project-more summary::before { content: '+'; display: inline-block; width: 1ch; }
+.project-more[open] summary::before { content: '\2212'; }
+.project-more summary:hover { color: var(--text); }
+.more-open { display: none; }
+.project-more[open] .more-open { display: inline; }
+.project-more[open] .more-closed { display: none; }
+.project-more-body { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+@media (min-width: 1000px) { .project-list { align-items: start; } }

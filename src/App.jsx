@@ -1,5 +1,14 @@
 import './App.css';
 
+// Put your resume at public/resume.pdf, or paste a Google Drive share link here.
+const RESUME_URL = "https://drive.google.com/file/d/1fe4IIajT4icfb2KzT-ZRWr4h3LzqsgzK/view?usp=drive_link";
+
+function resumeHref(url) {
+  const m = url.match(/drive\.google\.com\/file\/d\/([^/?]+)/) || url.match(/drive\.google\.com\/.*[?&]id=([^&]+)/);
+  return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : url;
+}
+
+
 const PROJECTS = [
   {
     id: '01',
@@ -20,7 +29,7 @@ const PROJECTS = [
       'The hard part was the routing logic itself: it has to reconcile live bed counts, predicted shortfalls, and hold expiry in real time, then handle the failure path (hospital rejects, hold expires) without leaving a patient stuck in limbo.',
     stack: ['React', 'TypeScript', 'FastAPI', 'PostgreSQL', 'WebSocket', 'TanStack Start'],
     status: 'Live build — core routing + reunification flows in place',
-    links: { github: '#', demo: '#' },
+    links: { github: '', demo: '' },
   },
   {
     id: '02',
@@ -40,7 +49,7 @@ const PROJECTS = [
       'Getting Supabase auth and role-based permissions to cleanly gate both API routes and frontend views, without duplicating the access logic in two places.',
     stack: ['FastAPI', 'Supabase', 'PostgreSQL', 'React', 'Vite', 'Tailwind'],
     status: 'Built — CI/CD configured, Docker-ready',
-    links: { github: '#', demo: '#' },
+    links: { github: '', demo: '' },
   },
   {
     id: '03',
@@ -61,7 +70,7 @@ const PROJECTS = [
       'Deciding when to escalate from cheap OCR to the vision model without a manual toggle — the hybrid approach needed a reliable enough heuristic to trust automatically.',
     stack: ['FastAPI', 'SQLAlchemy', 'React', 'NVIDIA NIM', 'Gemini 2.0'],
     status: 'Built — includes standalone CLI scripts for testing',
-    links: { github: '#', demo: '#' },
+    links: { github: '', demo: '' },
   },
   {
     id: '04',
@@ -81,7 +90,23 @@ const PROJECTS = [
       'Balancing classifier accuracy against inference speed enough to keep the UI\u2019s live typing-response feel snappy rather than laggy.',
     stack: ['PyTorch', 'FastAPI', 'NVIDIA NIM'],
     status: 'Built',
-    links: { github: '#', demo: '#' },
+    links: { github: '', demo: '' },
+  },
+  {
+    id: '05',
+    name: 'Blueprint-X',
+    tag: 'Floor Plan to 3D',
+    summary:
+      'A desktop app that turns architectural floor-plan images into 3D building models, detecting walls, doors, windows and room labels and exporting models for Unity and Blender.',
+    highlights: [
+      'YOLO11 detects doors, windows and furniture, OpenCV finds the walls, and EasyOCR reads the room labels',
+      'A geometry graph and topology engine work out how rooms connect before anything is exported',
+      'Exports JSON (schema v2.0) plus .obj and .glb files for Unity and Blender',
+      'Covered by a 103-test suite across the pipeline, geometry and wall-detector modules',
+    ],
+    stack: ['Python', 'PySide6', 'OpenCV', 'YOLO11', 'EasyOCR', 'Shapely', 'trimesh'],
+    status: 'In development — currently at Milestone 2',
+    links: { github: '', demo: '' },
   },
 ];
 
@@ -97,15 +122,14 @@ const HACKATHONS = [
     id: 'hack-2',
     name: 'Brainwave 2026',
     result: 'Finalist — top team out of 500+',
-    detail:
-      'Developed an exoplanet detection system identifying planets via periodic dips in stellar brightness (the transit method), including the pipeline to process and analyze light curve datasets and flag transit signals.',
+    detail: '',
   },
 ];
 
 const ACHIEVEMENTS = [
-  '700+ problems solved on Skillrack',
+  '900+ problems solved on Skillrack',
   '100+ problems solved on CodeChef',
-  '40+ problems solved on LeetCode',
+  '100+ problems solved on LeetCode',
   'Top 10 finish, Internal Hackathon',
   'First place, Creatathon',
 ];
@@ -113,15 +137,19 @@ const ACHIEVEMENTS = [
 const SKILLS = [
   {
     group: 'Languages',
-    items: ['C', 'C++', 'Python', 'JavaScript', 'TypeScript'],
+    items: ['C', 'C++', 'Python', 'Java', 'JavaScript', 'TypeScript'],
   },
   {
     group: 'AI / ML',
     items: ['PyTorch', 'Computer Vision', 'NVIDIA NIM APIs', 'Gemini'],
   },
   {
-    group: 'Web & Backend',
-    items: ['React', 'FastAPI', 'Supabase', 'PostgreSQL', 'HTML/CSS'],
+    group: 'Frontend',
+    items: ['React', 'HTML/CSS', 'Tailwind'],
+  },
+  {
+    group: 'Backend',
+    items: ['FastAPI', 'Supabase', 'PostgreSQL'],
   },
   {
     group: 'Tools',
@@ -193,11 +221,15 @@ function App() {
             <p className="hero-sub">
               Second-year AI & Data Science student building full-stack,
               AI-powered platforms — from emergency response coordination to
-              exoplanet detection — and competing in hackathons along the way.
+              floor-plan-to-3D conversion — and competing in hackathons along the way.
             </p>
             <div className="hero-actions">
               <a className="btn btn-primary" href="#work">View work</a>
-              <a className="btn btn-ghost" href="/resume.pdf">Resume</a>
+              {RESUME_URL && (
+                <a className="btn btn-ghost" href={resumeHref(RESUME_URL)} download="Azeem_M_S_Resume.pdf" target="_blank" rel="noreferrer">
+                  Download resume
+                </a>
+              )}
               <a className="btn btn-ghost" href="#contact">Contact</a>
             </div>
           </div>
@@ -232,27 +264,37 @@ function App() {
                     <span className="project-tag">{p.tag}</span>
                   </div>
                   <p className="project-summary">{p.summary}</p>
-                  <p className="project-role">{p.role}</p>
-                  <ul className="project-highlights">
-                    {p.highlights.map((h) => (
-                      <li key={h}>{h}</li>
-                    ))}
-                  </ul>
-                  <p className="project-challenge">
-                    <span className="challenge-label">Hard part —</span> {p.challenge}
-                  </p>
-                  <ul className="project-stack">
-                    {p.stack.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </ul>
-                  <div className="project-footer">
-                    <span className="project-status">{p.status}</span>
-                    <div className="project-links">
-                      <a href={p.links.github}>Code</a>
-                      <a href={p.links.demo}>Demo</a>
+                  <details className="project-more">
+                    <summary>
+                      <span className="more-closed">Show details</span>
+                      <span className="more-open">Hide details</span>
+                    </summary>
+                    <div className="project-more-body">
+                      {p.role && <p className="project-role">{p.role}</p>}
+                      <ul className="project-highlights">
+                        {p.highlights.map((h) => (
+                          <li key={h}>{h}</li>
+                        ))}
+                      </ul>
+                      {p.challenge && (
+                        <p className="project-challenge">
+                          <span className="challenge-label">Hard part —</span> {p.challenge}
+                        </p>
+                      )}
+                      <ul className="project-stack">
+                        {p.stack.map((s) => (
+                          <li key={s}>{s}</li>
+                        ))}
+                      </ul>
+                      <div className="project-footer">
+                        <span className="project-status">{p.status}</span>
+                        <div className="project-links">
+                          {p.links.github && <a href={p.links.github}>Code</a>}
+                          {p.links.demo && <a href={p.links.demo}>Demo</a>}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </details>
                 </div>
               </article>
             ))}
@@ -269,7 +311,7 @@ function App() {
                 <span className="timeline-period">{h.result}</span>
                 <div>
                   <h4>{h.name}</h4>
-                  <p>{h.detail}</p>
+                  {h.detail && <p>{h.detail}</p>}
                 </div>
               </div>
             ))}
