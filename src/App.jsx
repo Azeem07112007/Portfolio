@@ -201,7 +201,7 @@ function App() {
   return (
     <div className="page">
       <header className="nav">
-        <span className="nav-mark">AMS</span>
+        <span className="nav-mark">Portfolio</span>
         <nav>
           <a href="#work">Work</a>
           <a href="#hackathons">Hackathons</a>
